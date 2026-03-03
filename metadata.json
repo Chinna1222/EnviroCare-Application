@@ -1,0 +1,8 @@
+
+{
+  "name": "EnviroCare",
+  "description": "A modern environmental health companion providing real-time air quality monitoring, noise pollution tracking, and AI-driven health risk forecasts to safeguard your wellbeing.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
