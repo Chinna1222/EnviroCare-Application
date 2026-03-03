@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { AppView, UserProfile, EnvData, Alert } from './types';
 import Navigation from './components/Navigation';
 import WelcomeView from './views/WelcomeView';
@@ -94,6 +95,7 @@ const App: React.FC = () => {
     <div className="max-w-md mx-auto min-h-screen bg-transparent pb-24 relative overflow-hidden">
       {renderView()}
       {showNav && <Navigation currentView={view} onNavigate={handleNavigate} />}
+      <SpeedInsights />
     </div>
   );
 };
