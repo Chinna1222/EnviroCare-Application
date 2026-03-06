@@ -2,7 +2,11 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { EnvData, RiskForecastPoint, UserProfile } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const getAI = () => {
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY || '';
+  if (!apiKey) return null;
+  return new GoogleGenAI({ apiKey });
+};
 
 export const getHealthRiskInsights = async (envData: EnvData, profile: UserProfile) => {
   const prompt = `
@@ -21,9 +25,12 @@ export const getHealthRiskInsights = async (envData: EnvData, profile: UserProfi
     Explain why the risk is at its current level and what factors are most critical.
   `;
 
+  const ai = getAI();
+  if (!ai) return "Health risk evaluation requires a Gemini API key. Please configure it in your environment settings.";
+
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       contents: prompt,
     });
     return response.text;
@@ -40,9 +47,17 @@ export const getRiskForecast = async (envData: EnvData): Promise<RiskForecastPoi
     Format: [{"time": "12:00", "risk": 45}, ...]
   `;
 
+  const ai = getAI();
+  if (!ai) {
+    return Array.from({ length: 24 }).map((_, i) => ({
+      time: `${i}:00`,
+      risk: 20 + Math.random() * 40
+    }));
+  }
+
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.0-flash',
       contents: prompt,
       config: {
         responseMimeType: "application/json",
